@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Events Remainder</string>
+    <string name="add_event">Add Event</string>
+    <string name="update_event">Update Event</string>
+    <string name="month">Month</string>
+    <string name="day">DAY</string>
+    <string name="year">YEAR</string>
+    <string name="manage_your_events_at_one_place_and_keep_getting_notified">Manage your events at one place and keep getting notified!</string>
+</resources>
