@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EventsRemainder">
+        <activity android:name=".EventListActivity" />
         <activity
             android:name=".ScheduleActivity"
             android:parentActivityName=".MainActivity" />
@@ -19,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <service android:name=".NotificationService" />-->
     </application>
 
 </manifest>

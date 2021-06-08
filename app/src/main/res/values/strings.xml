@@ -5,5 +5,29 @@
     <string name="month">Month</string>
     <string name="day">DAY</string>
     <string name="year">YEAR</string>
+    <string name="date">DATE</string>
+    <string name="id">ID</string>
     <string name="manage_your_events_at_one_place_and_keep_getting_notified">Manage your events at one place and keep getting notified!</string>
+    <string name="name_of_the_event">Name of the event</string>
+    <string name="event_location">Event Location</string>
+    <string name="additional_description">Additional Description</string>
+    <string name="end_time">End Time</string>
+    <string name="start_time">Start Time</string>
+    <string name="set_remainder">Set Remainder</string>
+    <string name="remainder_1">Remainder 1</string>
+    <string name="remainder_2">Remainder 2</string>
+    <string name="remainder_3">Remainder 3</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="event_list">Events</string>
+    <string name="location_not_available">Location : N/A</string>
+
+    <string-array name="array_remainder">
+        <item>15m</item>
+        <item>30m</item>
+        <item>45m</item>
+        <item>1h</item>
+        <item>2h</item>
+        <item>4h</item>
+        <item>8h</item>
+    </string-array>
 </resources>
