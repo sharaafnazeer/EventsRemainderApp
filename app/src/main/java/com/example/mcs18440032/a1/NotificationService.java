@@ -104,6 +104,10 @@ public class NotificationService extends Service {
                 if (actualCurrentTime.isEqual(alertLongTime)) {
                     ringtone.play();
                     createNotifications(event.getId(), event.getEventName(), event.getStartTime());
+                } else {
+                    if (ringtone.isPlaying()) {
+                        ringtone.stop();
+                    }
                 }
             }
         }
