@@ -26,6 +26,8 @@ import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.joda.time.LocalTime;
+
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -161,33 +163,34 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         etEventName.setText(event.getEventName());
         etEventLocation.setText(event.getEventLocation());
         etEventDescription.setText(event.getDescription());
-        etStartTime.setText(Helper.convertTimeToString(event.getStartTime()));
-        etEndTime.setText(Helper.convertTimeToString(event.getEndTime()));
-        eventDate = Helper.convertDateToString(event.getDate());
+        etStartTime.setText(event.getStartTime());
+        etEndTime.setText(event.getEndTime());
 
-        if (event.getRemainder1() > 0) {
+        eventDate = event.getDate();
+
+        if (event.getRemainder1()  != null) {
             spRemainder1.setVisibility(View.VISIBLE);
             cbRemainder1.setChecked(true);
-            spRemainder1.setSelection(Arrays.asList(remainderArray)
-                    .indexOf(Helper.convertRemainderToString(event.getRemainder1())));
+//            spRemainder1.setSelection(Arrays.asList(remainderArray)
+//                    .indexOf(Helper.convertRemainderToString(event.getRemainder1())));
         } else {
             spRemainder1.setVisibility(View.INVISIBLE);
             cbRemainder1.setChecked(false);
         }
-        if (event.getRemainder2() > 0) {
+        if (event.getRemainder2()  != null) {
             spRemainder2.setVisibility(View.VISIBLE);
             cbRemainder2.setChecked(true);
-            spRemainder2.setSelection(Arrays.asList(remainderArray)
-                    .indexOf(Helper.convertRemainderToString(event.getRemainder2())));
+//            spRemainder2.setSelection(Arrays.asList(remainderArray)
+//                    .indexOf(Helper.convertRemainderToString(event.getRemainder2())));
         } else {
             spRemainder2.setVisibility(View.INVISIBLE);
             cbRemainder2.setChecked(false);
         }
-        if (event.getRemainder3() > 0) {
+        if (event.getRemainder3() != null) {
             spRemainder3.setVisibility(View.VISIBLE);
             cbRemainder3.setChecked(true);
-            spRemainder3.setSelection(Arrays.asList(remainderArray)
-                    .indexOf(Helper.convertRemainderToString(event.getRemainder3())));
+//            spRemainder3.setSelection(Arrays.asList(remainderArray)
+//                    .indexOf(Helper.convertRemainderToString(event.getRemainder3())));
         } else {
             spRemainder3.setVisibility(View.INVISIBLE);
             cbRemainder3.setChecked(false);
@@ -363,7 +366,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
             final Calendar c = Calendar.getInstance();
-            c.setTimeZone(TimeZone.getDefault());
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
@@ -390,7 +392,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
             final Calendar c = Calendar.getInstance();
-            c.setTimeZone(TimeZone.getDefault());
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 

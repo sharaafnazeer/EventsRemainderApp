@@ -110,12 +110,11 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         } else {
             viewHolder.getTvEventLocation().setText(String.format("Location : %s", event.getEventLocation()));
         }
-        viewHolder.getTvEventDate().setText(String.format("On %s", Helper.convertDateToString(event.getDate())));
-        viewHolder.getTvStartEndTime().setText(String.format("at %s to %s", Helper.convertTimeToString(event.getStartTime()), Helper.convertTimeToString(event.getEndTime())));
+        viewHolder.getTvEventDate().setText(String.format("On %s", event.getDate()));
+        viewHolder.getTvStartEndTime().setText(String.format("at %s to %s", event.getStartTime(), event.getEndTime()));
 
         viewHolder.getCvEvent().setOnClickListener(view -> {
             Intent eventScheduleIntent = new Intent(view.getContext(), ScheduleActivity.class);
-            eventScheduleIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             Bundle bundle = new Bundle();
             bundle.putLong(view.getContext().getString(R.string.id), event.getId());
             eventScheduleIntent.putExtras(bundle);

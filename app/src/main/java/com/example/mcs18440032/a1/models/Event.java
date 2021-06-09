@@ -9,12 +9,12 @@ public class Event {
     private String eventName;
     private String eventLocation;
     private String description;
-    private long date;
-    private long startTime;
-    private long endTime;
-    private long remainder1;
-    private long remainder2;
-    private long remainder3;
+    private String date;
+    private String startTime;
+    private String endTime;
+    private String remainder1;
+    private String remainder2;
+    private String remainder3;
 
     public Event() {
 
@@ -26,18 +26,18 @@ public class Event {
         this.eventName = eventName;
         this.eventLocation = eventLocation;
         this.description = description;
-        this.date = Helper.convertDateToLong(date);
-        this.startTime = Helper.convertTimeToLong(startTime);
-        this.endTime = Helper.convertTimeToLong(endTime);
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
 
         if (remainder1 != null) {
-            this.remainder1 = Helper.convertRemainderToLong(remainder1);
+            this.remainder1 = remainder1;
         }
         if (remainder2 != null) {
-            this.remainder2 = Helper.convertRemainderToLong(remainder2);
+            this.remainder2 = remainder2;
         }
         if (remainder3 != null) {
-            this.remainder3 = Helper.convertRemainderToLong(remainder3);
+            this.remainder3 = remainder3;
         }
     }
 
@@ -73,67 +73,51 @@ public class Event {
         this.description = description;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public long getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public void setStartTime(String startTime) throws ParseException {
-        try {
-            this.startTime = Helper.convertTimeToLong(startTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public long getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public void setEndTime(String endTime) throws ParseException {
-        try {
-            this.endTime = Helper.convertTimeToLong(endTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public long getRemainder1() {
+    public String getRemainder1() {
         return remainder1;
     }
 
-    public void setRemainder1(long remainder1) {
+    public void setRemainder1(String remainder1) {
         this.remainder1 = remainder1;
     }
 
-    public long getRemainder2() {
+    public String getRemainder2() {
         return remainder2;
     }
 
-    public void setRemainder2(long remainder2) {
+    public void setRemainder2(String remainder2) {
         this.remainder2 = remainder2;
     }
 
-    public long getRemainder3() {
+    public String getRemainder3() {
         return remainder3;
     }
 
-    public void setRemainder3(long remainder3) {
+    public void setRemainder3(String remainder3) {
         this.remainder3 = remainder3;
     }
 }

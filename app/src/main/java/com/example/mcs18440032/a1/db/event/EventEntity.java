@@ -33,12 +33,12 @@ public class EventEntity implements BaseColumns {
             EventEntity.EVENTS_COLUMN_NAME + " TEXT NOT NULL, " +
             EventEntity.EVENTS_COLUMN_LOCATION + " TEXT NOT NULL, " +
             EventEntity.EVENTS_COLUMN_DESCRIPTION + " TEXT, " +
-            EventEntity.EVENTS_COLUMN_DATE + " INTEGER, " +
-            EventEntity.EVENTS_COLUMN_START_TIME + " INTEGER, " +
-            EventEntity.EVENTS_COLUMN_END_TIME + " INTEGER, " +
-            EventEntity.EVENTS_COLUMN_REMAINDER_1 + " INTEGER NULL, " +
-            EventEntity.EVENTS_COLUMN_REMAINDER_2 + " INTEGER NULL, " +
-            EventEntity.EVENTS_COLUMN_REMAINDER_3 + " INTEGER NULL " +
+            EventEntity.EVENTS_COLUMN_DATE + " TEXT, " +
+            EventEntity.EVENTS_COLUMN_START_TIME + " TEXT, " +
+            EventEntity.EVENTS_COLUMN_END_TIME + " TEXT NULL, " +
+            EventEntity.EVENTS_COLUMN_REMAINDER_1 + " TEXT NULL, " +
+            EventEntity.EVENTS_COLUMN_REMAINDER_2 + " TEXT NULL, " +
+            EventEntity.EVENTS_COLUMN_REMAINDER_3 + " TEXT NULL " +
             ")";
 
     public static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " +
@@ -61,11 +61,10 @@ public class EventEntity implements BaseColumns {
         values.put(EventEntity.EVENTS_COLUMN_DATE, event.getDate());
         values.put(EventEntity.EVENTS_COLUMN_START_TIME, event.getStartTime());
         values.put(EventEntity.EVENTS_COLUMN_END_TIME, event.getEndTime());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_1, event.getRemainder1());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_2, event.getRemainder2());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_3, event.getRemainder3());
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_1, Helper.convertRemainderToDbFormat(event.getRemainder1()));
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_2, Helper.convertRemainderToDbFormat(event.getRemainder2()));
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_3, Helper.convertRemainderToDbFormat(event.getRemainder3()));
 
-        System.out.println("CREATE DATE === " + event.getDate());
         return database.insert(EventEntity.EVENTS_TABLE_NAME, null, values);
     }
 
@@ -78,9 +77,9 @@ public class EventEntity implements BaseColumns {
         values.put(EventEntity.EVENTS_COLUMN_DATE, event.getDate());
         values.put(EventEntity.EVENTS_COLUMN_START_TIME, event.getStartTime());
         values.put(EventEntity.EVENTS_COLUMN_END_TIME, event.getEndTime());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_1, event.getRemainder1());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_2, event.getRemainder2());
-        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_3, event.getRemainder3());
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_1, Helper.convertRemainderToDbFormat(event.getRemainder1()));
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_2, Helper.convertRemainderToDbFormat(event.getRemainder2()));
+        values.put(EventEntity.EVENTS_COLUMN_REMAINDER_3, Helper.convertRemainderToDbFormat(event.getRemainder3()));
 
         String selectionValue = EventEntity.EVENTS_COLUMN_ID + " = ?";
         String[] selectionArgs = {id + ""};
@@ -104,7 +103,7 @@ public class EventEntity implements BaseColumns {
         String[] projectionList = {
                 EventEntity.EVENTS_COLUMN_ID, EventEntity.EVENTS_COLUMN_NAME,
                 EventEntity.EVENTS_COLUMN_LOCATION, EventEntity.EVENTS_COLUMN_DESCRIPTION,
-                EventEntity.EVENTS_COLUMN_DATE, EventEntity.EVENTS_COLUMN_START_TIME,
+                EventEntity.EVENTS_COLUMN_START_TIME, EventEntity.EVENTS_COLUMN_DATE,
                 EventEntity.EVENTS_COLUMN_END_TIME, EventEntity.EVENTS_COLUMN_REMAINDER_1,
                 EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3
         };
@@ -114,7 +113,7 @@ public class EventEntity implements BaseColumns {
 
         if (eventDate != null) {
             selectionValue = EventEntity.EVENTS_COLUMN_DATE + " LIKE ? ";
-            selectionArgs = new String[]{String.valueOf(Helper.convertDateToLong(eventDate))};
+            selectionArgs = new String[]{eventDate};
         }
 
         String sort = EventEntity.EVENTS_COLUMN_NAME + " DESC";
@@ -137,12 +136,12 @@ public class EventEntity implements BaseColumns {
                 event.setEventName(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_NAME)));
                 event.setEventLocation(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_LOCATION)));
                 event.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DESCRIPTION)));
-                event.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DATE)));
-                event.setStartTime(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_START_TIME)));
-                event.setEndTime(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_END_TIME)));
-                event.setRemainder1(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
-                event.setRemainder2(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
-                event.setRemainder3(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
+                event.setDate(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DATE)));
+                event.setStartTime(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_START_TIME)));
+                event.setEndTime(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_END_TIME)));
+                event.setRemainder1(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
+                event.setRemainder2(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
+                event.setRemainder3(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
                 eventList.add(event);
             }
             cursor.close();
@@ -155,7 +154,7 @@ public class EventEntity implements BaseColumns {
         String[] projectionList = {
                 EventEntity.EVENTS_COLUMN_ID, EventEntity.EVENTS_COLUMN_NAME,
                 EventEntity.EVENTS_COLUMN_LOCATION, EventEntity.EVENTS_COLUMN_DESCRIPTION,
-                EventEntity.EVENTS_COLUMN_DATE, EventEntity.EVENTS_COLUMN_START_TIME,
+                EventEntity.EVENTS_COLUMN_START_TIME, EventEntity.EVENTS_COLUMN_DATE,
                 EventEntity.EVENTS_COLUMN_END_TIME, EventEntity.EVENTS_COLUMN_REMAINDER_1,
                 EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3
         };
@@ -181,12 +180,12 @@ public class EventEntity implements BaseColumns {
             event.setEventName(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_NAME)));
             event.setEventLocation(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_LOCATION)));
             event.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DESCRIPTION)));
-            event.setDate(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DATE)));
-            event.setStartTime(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_START_TIME)));
-            event.setEndTime(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_END_TIME)));
-            event.setRemainder1(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
-            event.setRemainder2(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
-            event.setRemainder3(cursor.getLong(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
+            event.setDate(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_DATE)));
+            event.setStartTime(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_START_TIME)));
+            event.setEndTime(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_END_TIME)));
+            event.setRemainder1(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
+            event.setRemainder2(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
+            event.setRemainder3(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
             cursor.close();
             return event;
         }

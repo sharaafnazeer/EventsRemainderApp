@@ -20,6 +20,8 @@
     <string name="delete_event">Delete Event</string>
     <string name="event_list">Events</string>
     <string name="location_not_available">Location : N/A</string>
+    <string name="channel_name">notification channel</string>
+    <string name="channel_description">this is the description of notification channel</string>
 
     <string-array name="array_remainder">
         <item>15m</item>

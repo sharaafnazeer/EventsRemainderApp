@@ -35,7 +35,6 @@ public class EventListActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println("EVENT DATE ========= " + eventDate);
     }
 
     @Override

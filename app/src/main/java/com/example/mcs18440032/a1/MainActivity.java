@@ -1,10 +1,15 @@
 package com.example.mcs18440032.a1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,8 +19,13 @@ import com.example.mcs18440032.a1.db.event.EventEntity;
 import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,13 +49,19 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.FOREGROUND_SERVICE},
+                    PackageManager.PERMISSION_GRANTED);
+        }
+
         eventEntity = new EventEntity(getApplicationContext());
 
-//        startBackgroundService(); // Start the background service
+        startBackgroundService(); // Start the background service
 
         Locale.setDefault(Locale.US);
         month = (GregorianCalendar) GregorianCalendar.getInstance();
-        month.setTimeZone(TimeZone.getDefault());
+//        month.setTimeZone(TimeZone.getDefault());
         itemMonth = (GregorianCalendar) month.clone();
 
         items = new ArrayList<>();
@@ -58,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         handler.post(calendarUpdater);
 
         TextView title = findViewById(R.id.title);
-        title.setText(android.text.format.DateFormat.format("MMMM yyyy", month));
+        title.setText(DateFormat.format("MMMM yyyy", month));
 
         RelativeLayout previous = findViewById(R.id.previous);
 
@@ -113,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        refreshCalendar();
+        super.onResume();
     }
 
     protected void setNextMonth() {
@@ -184,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
             List<Event> eventList = getAllEvents();
 
             for (Event event : eventList) {
-                items.add(Helper.convertDateToString(event.getDate()));
+                items.add(event.getDate());
             }
 
         } catch (ParseException e) {
@@ -201,31 +223,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkAvailableEvents() throws ParseException {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeZone(TimeZone.getDefault());
-        Date now = calendar.getTime();
+        DateTimeZone zoneUTC = DateTimeZone.UTC;
+        DateTime now = DateTime.now();
         List<Event> eventList = eventEntity.getAllByDate(null);
 
         for (Event event : eventList) {
 
-            calendar.setTimeInMillis(event.getDate());
-            calendar.add(Calendar.MILLISECOND, (int) event.getStartTime());
-
-            System.out.println("TEST DATE === " + calendar.getTime());
-
-            long eventTime = event.getDate() + event.getStartTime();
-            System.out.println("EVENT DATE === " + event.getDate());
+            System.out.println("TODAY's DATE === " + now.toString());
+            System.out.println("EVENT DATE ====" + event.getDate());
             System.out.println("EVENT START === " + event.getStartTime());
-            System.out.println("EVENT TIME === " + eventTime);
-            System.out.println("CURRENT TIME === " + now.getTime());
-            System.out.println("EVENT REM 1 === " + event.getRemainder1());
 
-            long alertTime = eventTime - event.getRemainder1();
+            String eventDateTime = event.getDate() + " " + event.getStartTime();
 
-            System.out.println("ALERT TIME === " + alertTime);
+            System.out.println("EVENT DATE & TIME ===  " + eventDateTime);
+
+            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+            DateTime eventActualTime = dateTimeFormatter.parseDateTime(eventDateTime);
+
+            System.out.println("ACTUAL EVENT DATE & TIME ===  " + eventActualTime);
+
+            DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("HH:mm");
+            LocalTime alertBefore = timeFormatter.parseLocalTime(event.getRemainder1());
+
+            System.out.println("ALERT BEFORE ===  " + alertBefore);
+
+            long alertLongTime = eventActualTime.getMillis() - alertBefore.getMillisOfDay();
+            DateTime alertTime = new DateTime(alertLongTime);
 
 
-            System.out.println("COMPARE TIME === " + (alertTime < now.getTime()));
+            System.out.println("ACTUAL ALERT TIME ===  " + alertTime);
+
+//            now.isAfter(alertLongTime);
+
+            System.out.println("ALERT CHECK NOW > ALERT ===  " + now.isAfter(alertLongTime));
+            System.out.println("ALERT CHECK NOW < ALERT ===  " + now.isBefore(alertLongTime));
+            System.out.println("ALERT CHECK NOW = ALERT ===  " + now.isEqual(alertLongTime));
         }
 
         int i = 10;

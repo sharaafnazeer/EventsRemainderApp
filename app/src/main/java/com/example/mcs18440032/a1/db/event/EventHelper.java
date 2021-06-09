@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class EventHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 14;
     public static final String DATABASE_NAME = "events.db";
 
     public EventHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
