@@ -19,10 +19,13 @@ import android.widget.TimePicker;
 
 import com.example.mcs18440032.a1.db.event.EventEntity;
 import com.example.mcs18440032.a1.db.SharedPref;
+import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 import com.google.android.material.textfield.TextInputEditText;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -54,6 +57,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
     private EventEntity eventEntity;
     private String eventDate;
     private long eventId = 0;
+    private String[] remainderArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         eventId = bundle.getLong(getString(R.string.id), 0);
 
         // Get remainder related array from string resource
-        String[] remainderArray = getResources().getStringArray(R.array.array_remainder);
+        remainderArray = getResources().getStringArray(R.array.array_remainder);
 
         etStartTime = findViewById(R.id.etStartTime);
         etEndTime = findViewById(R.id.etEndTime);
@@ -158,20 +162,20 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
 
         eventDate = event.getDate();
 
-        if (event.getRemainder1()  != null) {
+        if (event.getRemainder1() != null) {
             spRemainder1.setVisibility(View.VISIBLE);
             cbRemainder1.setChecked(true);
-//            spRemainder1.setSelection(Arrays.asList(remainderArray)
-//                    .indexOf(Helper.convertRemainderToString(event.getRemainder1())));
+            spRemainder1.setSelection(Arrays.asList(remainderArray)
+                    .indexOf(Helper.convertRemainderToUiFormat(event.getRemainder1())));
         } else {
             spRemainder1.setVisibility(View.INVISIBLE);
             cbRemainder1.setChecked(false);
         }
-        if (event.getRemainder2()  != null) {
+        if (event.getRemainder2() != null) {
             spRemainder2.setVisibility(View.VISIBLE);
             cbRemainder2.setChecked(true);
-//            spRemainder2.setSelection(Arrays.asList(remainderArray)
-//                    .indexOf(Helper.convertRemainderToString(event.getRemainder2())));
+            spRemainder2.setSelection(Arrays.asList(remainderArray)
+                    .indexOf(Helper.convertRemainderToUiFormat(event.getRemainder2())));
         } else {
             spRemainder2.setVisibility(View.INVISIBLE);
             cbRemainder2.setChecked(false);
@@ -179,8 +183,8 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         if (event.getRemainder3() != null) {
             spRemainder3.setVisibility(View.VISIBLE);
             cbRemainder3.setChecked(true);
-//            spRemainder3.setSelection(Arrays.asList(remainderArray)
-//                    .indexOf(Helper.convertRemainderToString(event.getRemainder3())));
+            spRemainder3.setSelection(Arrays.asList(remainderArray)
+                    .indexOf(Helper.convertRemainderToUiFormat(event.getRemainder3())));
         } else {
             spRemainder3.setVisibility(View.INVISIBLE);
             cbRemainder3.setChecked(false);
@@ -277,6 +281,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
     private void deleteEventFromDB() {
         eventEntity.delete(eventId);
         System.out.println("Event Deleted  ========= " + eventId);
+        DynamicToast.makeSuccess(this, "Event deleted successfully").show();
         finish(); // Close the schedule activity
     }
 
@@ -291,6 +296,29 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         String eventRem1 = null;
         String eventRem2 = null;
         String eventRem3 = null;
+
+        if (eventName.isEmpty()) {
+            DynamicToast.makeError(this, "Please provide event name").show();
+            return;
+        }
+        if (eventLocation.isEmpty()) {
+            DynamicToast.makeError(this, "Please provide event location").show();;
+            return;
+        }
+        if (eventStartTime.isEmpty()) {
+            DynamicToast.makeError(this, "Please select event start time").show();;
+            return;
+        }
+        String eventStartDateTime = eventDate + " " + eventStartTime;
+        String eventEndDateTime = eventDate + " " + eventEndTime;
+
+        if (!eventEndTime.isEmpty()) {
+            if (!Helper.isEndTimeGreaterThanStartTime(eventStartDateTime, eventEndDateTime)) {
+                DynamicToast.makeError(this, "Event end time should be greater than event start time").show();;
+                return;
+            }
+        }
+
 
         if (cbRemainder1.isChecked()) {
             eventRem1 = spRemainder1.getSelectedItem().toString();
@@ -309,6 +337,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
                         eventDate, eventStartTime, eventEndTime, eventRem1, eventRem2, eventRem3);
                 eventEntity.update(event, eventId);
                 System.out.println("Event Updated  ========= " + eventId);
+                DynamicToast.makeSuccess(this, "Event updated successfully").show();
             } else {
                 // New event; so create a new event
                 long id = SharedPref.getKeyLastInsertedID(getApplicationContext()) + 1;
@@ -317,6 +346,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
                 eventEntity.create(event);
                 SharedPref.setKeyLastInsertedID(getApplicationContext(), id);
                 System.out.println("Event Created  ========= " + id);
+                DynamicToast.makeSuccess(this, "Event created successfully").show();
             }
             finish(); // Close the schedule activity
 

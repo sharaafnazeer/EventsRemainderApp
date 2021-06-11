@@ -18,6 +18,7 @@ import com.example.mcs18440032.a1.models.Event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
 
@@ -111,7 +112,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
             viewHolder.getTvEventLocation().setText(String.format("Location : %s", event.getEventLocation()));
         }
         viewHolder.getTvEventDate().setText(String.format("On %s", event.getDate()));
-        viewHolder.getTvStartEndTime().setText(String.format("at %s to %s", event.getStartTime(), event.getEndTime()));
+
+        if (!Objects.requireNonNull(event.getEndTime()).equals("")) {
+            viewHolder.getTvStartEndTime().setText(String.format("at %s to %s", event.getStartTime(), event.getEndTime()));
+        } else {
+            viewHolder.getTvStartEndTime().setText(String.format("at %s", event.getStartTime()));
+        }
+
 
         viewHolder.getCvEvent().setOnClickListener(view -> {
             Intent eventScheduleIntent = new Intent(view.getContext(), ScheduleActivity.class);

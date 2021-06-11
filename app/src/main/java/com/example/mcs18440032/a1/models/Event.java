@@ -15,6 +15,7 @@ public class Event {
     private String remainder1;
     private String remainder2;
     private String remainder3;
+    private int isRemainder;
 
     public Event() {
 
@@ -119,5 +120,13 @@ public class Event {
 
     public void setRemainder3(String remainder3) {
         this.remainder3 = remainder3;
+    }
+
+    public int getIsRemainder() {
+        return isRemainder;
+    }
+
+    public void setIsRemainder(int isRemainder) {
+        this.isRemainder = isRemainder;
     }
 }

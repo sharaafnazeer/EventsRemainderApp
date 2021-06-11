@@ -1,6 +1,16 @@
 package com.example.mcs18440032.a1.helpers;
 
+import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 public class Helper {
+
+    Ringtone ringtone;
 
     public static String convertRemainderToDbFormat(String remainder) {
         String value = null;
@@ -64,4 +74,16 @@ public class Helper {
         }
         return remainderVal;
     }
+
+    public static boolean isEndTimeGreaterThanStartTime(String startTime, String endTime) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        DateTime eventActualStartTime = dateTimeFormatter.parseDateTime(startTime);
+        DateTime eventActualEndTime = dateTimeFormatter.parseDateTime(endTime);
+
+        if (eventActualEndTime.isAfter(eventActualStartTime.getMillis())) {
+            return true;
+        }
+        return false;
+    }
+
 }

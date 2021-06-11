@@ -26,19 +26,21 @@ public class EventEntity implements BaseColumns {
     public static final String EVENTS_COLUMN_REMAINDER_1 = "remainder_1";
     public static final String EVENTS_COLUMN_REMAINDER_2 = "remainder_2";
     public static final String EVENTS_COLUMN_REMAINDER_3 = "remainder_3";
+    public static final String EVENTS_COLUMN_SEND_REMAINDER = "is_remainder";
 
     public static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
             EventEntity.EVENTS_TABLE_NAME +
             "(" + EventEntity.EVENTS_COLUMN_ID + " INTEGER PRIMARY KEY, " +
             EventEntity.EVENTS_COLUMN_NAME + " TEXT NOT NULL, " +
             EventEntity.EVENTS_COLUMN_LOCATION + " TEXT NOT NULL, " +
-            EventEntity.EVENTS_COLUMN_DESCRIPTION + " TEXT, " +
+            EventEntity.EVENTS_COLUMN_DESCRIPTION + " TEXT NULL, " +
             EventEntity.EVENTS_COLUMN_DATE + " TEXT, " +
             EventEntity.EVENTS_COLUMN_START_TIME + " TEXT, " +
             EventEntity.EVENTS_COLUMN_END_TIME + " TEXT NULL, " +
             EventEntity.EVENTS_COLUMN_REMAINDER_1 + " TEXT NULL, " +
             EventEntity.EVENTS_COLUMN_REMAINDER_2 + " TEXT NULL, " +
-            EventEntity.EVENTS_COLUMN_REMAINDER_3 + " TEXT NULL " +
+            EventEntity.EVENTS_COLUMN_REMAINDER_3 + " TEXT NULL, " +
+            EventEntity.EVENTS_COLUMN_SEND_REMAINDER + " INTEGER DEFAULT 0 NOT NULL " +
             ")";
 
     public static final String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " +
@@ -87,6 +89,17 @@ public class EventEntity implements BaseColumns {
         return database.update(EventEntity.EVENTS_TABLE_NAME, values, selectionValue, selectionArgs);
     }
 
+    public long updateRemainderSend(long id) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(EventEntity.EVENTS_COLUMN_SEND_REMAINDER, 1);
+
+        String selectionValue = EventEntity.EVENTS_COLUMN_ID + " = ?";
+        String[] selectionArgs = {id + ""};
+
+        return database.update(EventEntity.EVENTS_TABLE_NAME, values, selectionValue, selectionArgs);
+    }
+
     public long delete(long id) {
         SQLiteDatabase database = helper.getWritableDatabase();
 
@@ -105,7 +118,8 @@ public class EventEntity implements BaseColumns {
                 EventEntity.EVENTS_COLUMN_LOCATION, EventEntity.EVENTS_COLUMN_DESCRIPTION,
                 EventEntity.EVENTS_COLUMN_START_TIME, EventEntity.EVENTS_COLUMN_DATE,
                 EventEntity.EVENTS_COLUMN_END_TIME, EventEntity.EVENTS_COLUMN_REMAINDER_1,
-                EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3
+                EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3,
+                EventEntity.EVENTS_COLUMN_SEND_REMAINDER
         };
 
         String selectionValue = null;
@@ -141,6 +155,7 @@ public class EventEntity implements BaseColumns {
                 event.setEndTime(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_END_TIME)));
                 event.setRemainder1(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
                 event.setRemainder2(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
+                event.setIsRemainder(cursor.getInt(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_SEND_REMAINDER)));
                 event.setRemainder3(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
                 eventList.add(event);
             }
@@ -156,7 +171,8 @@ public class EventEntity implements BaseColumns {
                 EventEntity.EVENTS_COLUMN_LOCATION, EventEntity.EVENTS_COLUMN_DESCRIPTION,
                 EventEntity.EVENTS_COLUMN_START_TIME, EventEntity.EVENTS_COLUMN_DATE,
                 EventEntity.EVENTS_COLUMN_END_TIME, EventEntity.EVENTS_COLUMN_REMAINDER_1,
-                EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3
+                EventEntity.EVENTS_COLUMN_REMAINDER_2, EventEntity.EVENTS_COLUMN_REMAINDER_3,
+                EventEntity.EVENTS_COLUMN_SEND_REMAINDER
         };
 
         String selectionValue = EventEntity.EVENTS_COLUMN_ID + " = ?";
@@ -186,6 +202,7 @@ public class EventEntity implements BaseColumns {
             event.setRemainder1(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_1)));
             event.setRemainder2(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_2)));
             event.setRemainder3(cursor.getString(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_REMAINDER_3)));
+            event.setIsRemainder(cursor.getInt(cursor.getColumnIndexOrThrow(EventEntity.EVENTS_COLUMN_SEND_REMAINDER)));
             cursor.close();
             return event;
         }

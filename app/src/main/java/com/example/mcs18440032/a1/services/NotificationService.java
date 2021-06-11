@@ -6,10 +6,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.mcs18440032.a1.MainActivity;
 import com.example.mcs18440032.a1.R;
 import com.example.mcs18440032.a1.db.event.EventEntity;
+import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 
 import org.joda.time.DateTime;
@@ -35,14 +38,12 @@ public class NotificationService extends Service {
 
     private EventEntity eventEntity;
     private static final String CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
-    private Ringtone ringtone;
     private Timer timer;
 
     @Override
     public void onCreate() {
         eventEntity = new EventEntity(getApplication().getApplicationContext());
         timer = new Timer();
-        ringtone = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
         Log.i("SERVICE", "Service Created");
         super.onCreate();
     }
@@ -65,7 +66,6 @@ public class NotificationService extends Service {
     @Override
     public void onDestroy() {
         Log.i("SERVICE", "Service Stopped");
-        ringtone.stop();
         super.onDestroy();
     }
 
@@ -93,13 +93,8 @@ public class NotificationService extends Service {
             System.out.println("ALERT CHECK NOW = ALERT ===  " + actualCurrentTime.isEqual(alertLongTime));
 
             if (eventActualTime.isAfter(actualCurrentTime.getMillis())) {
-                if (actualCurrentTime.isEqual(alertLongTime)) {
-                    ringtone.play();
+                if (actualCurrentTime.isEqual(alertLongTime) && event.getIsRemainder() != 1) {
                     createNotifications(event.getId(), event.getEventName(), event.getStartTime());
-                } else {
-                    if (ringtone.isPlaying()) {
-                        ringtone.stop();
-                    }
                 }
             }
         }
@@ -109,9 +104,8 @@ public class NotificationService extends Service {
         // Create an explicit intent for an Activity in the app
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), (int) id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
@@ -119,19 +113,18 @@ public class NotificationService extends Service {
                 .setContentText(title + " at " + startTime)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                // Set the intent that will fire when the user taps the notification
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setLights(Color.argb(255, 234, 146, 21), 1000, 10000)
                 .setContentIntent(pendingIntent)
-                .setTimeoutAfter(20000)
-//                .setFullScreenIntent(pendingIntent, true)
+                .setTimeoutAfter(10000)
                 .setAutoCancel(true)
-                .setOngoing(true)
-                .addAction(R.drawable.ic_okay, "Got It!", pendingIntent)
+                .setOnlyAlertOnce(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .build();
-
-//        startForeground((int) id, notification);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         notificationManager.notify((int) id, notification);
+        eventEntity.updateRemainderSend(id);
         createNotificationChannel();
     }
 
