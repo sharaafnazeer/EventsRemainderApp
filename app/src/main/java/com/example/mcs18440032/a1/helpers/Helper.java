@@ -1,16 +1,10 @@
 package com.example.mcs18440032.a1.helpers;
 
-import android.content.Context;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 public class Helper {
-
-    Ringtone ringtone;
 
     public static String convertRemainderToDbFormat(String remainder) {
         String value = null;

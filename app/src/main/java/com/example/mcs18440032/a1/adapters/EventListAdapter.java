@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mcs18440032.a1.R;
 import com.example.mcs18440032.a1.ScheduleActivity;
-import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 
 import java.util.ArrayList;

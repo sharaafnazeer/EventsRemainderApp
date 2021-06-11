@@ -1,7 +1,5 @@
 package com.example.mcs18440032.a1.models;
 
-import com.example.mcs18440032.a1.helpers.Helper;
-
 import java.text.ParseException;
 
 public class Event {
