@@ -18,7 +18,6 @@ import java.util.Objects;
 public class EventListActivity extends AppCompatActivity {
 
     EventEntity eventEntity;
-    private RecyclerView rvEvents;
     private EventListAdapter eventListAdapter;
     private List<Event> eventList;
     private String eventDate;
@@ -65,7 +64,7 @@ public class EventListActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         eventDate = bundle.getString(getString(R.string.date));
 
-        rvEvents = findViewById(R.id.rvEvents);
+        RecyclerView rvEvents = findViewById(R.id.rvEvents);
         eventList = new ArrayList<>();
         eventListAdapter = new EventListAdapter(eventList);
 

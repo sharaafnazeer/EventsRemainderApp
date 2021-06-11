@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.example.mcs18440032.a1.adapters.CalendarAdapter;
 import com.example.mcs18440032.a1.db.event.EventEntity;
-import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
+import com.example.mcs18440032.a1.services.NotificationService;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -27,12 +27,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 

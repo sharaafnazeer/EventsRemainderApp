@@ -1,5 +1,6 @@
 package com.example.mcs18440032.a1.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -19,21 +20,19 @@ import java.util.List;
 import java.util.Locale;
 
 public class CalendarAdapter extends BaseAdapter {
-    private Context mContext;
+    private final Context mContext;
 
-    private java.util.Calendar month;
+    private final java.util.Calendar month;
     public GregorianCalendar pmonth; // calendar instance for previous month
     /**
      * calendar instance for previous month for getting complete view
      */
     public GregorianCalendar pmonthmaxset;
-    private GregorianCalendar selectedDate;
+    private final GregorianCalendar selectedDate;
     int firstDay;
     int maxWeeknumber;
     int maxP;
     int calMaxP;
-    int lastWeekDay;
-    int leftDays;
     int mnthlength;
     String itemvalue, curentDateString;
     DateFormat df;
@@ -43,13 +42,13 @@ public class CalendarAdapter extends BaseAdapter {
     private View previousView;
 
 	public CalendarAdapter(Context c, GregorianCalendar monthCalendar) {
-        CalendarAdapter.dayString = new ArrayList<String>();
+        CalendarAdapter.dayString = new ArrayList<>();
         Locale.setDefault( Locale.US );
         month = monthCalendar;
         selectedDate = (GregorianCalendar) monthCalendar.clone();
         mContext = c;
         month.set(GregorianCalendar.DAY_OF_MONTH, 1);
-        this.items = new ArrayList<String>();
+        this.items = new ArrayList<>();
         df = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         curentDateString = df.format(selectedDate.getTime());
         refreshDays();
@@ -77,6 +76,7 @@ public class CalendarAdapter extends BaseAdapter {
     }
 
     // create a new view for each item referenced by the Adapter
+    @SuppressLint("InflateParams")
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         TextView dayView;
@@ -87,7 +87,7 @@ public class CalendarAdapter extends BaseAdapter {
             v = vi.inflate(R.layout.calendar_item, null);
 
         }
-        dayView = (TextView) v.findViewById(R.id.date);
+        dayView = v.findViewById(R.id.date);
         // separates daystring into parts.
         String[] separatedTime = dayString.get(position).split("-");
         // taking last part of date. ie; 2 from 2012-12-02
@@ -127,7 +127,7 @@ public class CalendarAdapter extends BaseAdapter {
         }
 
         // show icon if date is not empty and it exists in the items array
-        ImageView iw = (ImageView) v.findViewById(R.id.date_icon);
+        ImageView iw = v.findViewById(R.id.date_icon);
         if (date.length() > 0 && items != null && items.contains(date)) {
             iw.setVisibility(android.view.View.VISIBLE);
         } else {

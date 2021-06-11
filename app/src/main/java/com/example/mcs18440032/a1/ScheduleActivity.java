@@ -2,7 +2,6 @@ package com.example.mcs18440032.a1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.TypedArrayUtils;
 import androidx.fragment.app.DialogFragment;
 
 import android.annotation.SuppressLint;
@@ -15,24 +14,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.example.mcs18440032.a1.db.event.EventEntity;
 import com.example.mcs18440032.a1.db.SharedPref;
-import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.joda.time.LocalTime;
-
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Objects;
-import java.util.TimeZone;
 
 public class ScheduleActivity extends AppCompatActivity implements View.OnFocusChangeListener,
         View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -42,7 +34,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
     private final static String REMAINDER_1 = "REMAINDER_1";
     private final static String REMAINDER_2 = "REMAINDER_2";
     private final static String REMAINDER_3 = "REMAINDER_3";
-    private String[] remainderArray;
 
     private TextInputEditText etEventName;
     private TextInputEditText etEventLocation;
@@ -63,7 +54,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
     private EventEntity eventEntity;
     private String eventDate;
     private long eventId = 0;
-    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +105,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
         eventId = bundle.getLong(getString(R.string.id), 0);
 
         // Get remainder related array from string resource
-        remainderArray = getResources().getStringArray(R.array.array_remainder);
+        String[] remainderArray = getResources().getStringArray(R.array.array_remainder);
 
         etStartTime = findViewById(R.id.etStartTime);
         etEndTime = findViewById(R.id.etEndTime);
@@ -133,7 +123,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
 
         // Setting the remainder values to an adapter in order to display inside the spinners
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, remainderArray);
+                new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, remainderArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spRemainder1.setAdapter(adapter);
@@ -159,7 +149,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnFocusC
     }
 
     private void getEventById() {
-        event = eventEntity.get(eventId);
+        Event event = eventEntity.get(eventId);
         etEventName.setText(event.getEventName());
         etEventLocation.setText(event.getEventLocation());
         etEventDescription.setText(event.getDescription());

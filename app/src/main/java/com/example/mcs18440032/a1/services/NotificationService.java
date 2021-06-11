@@ -1,4 +1,4 @@
-package com.example.mcs18440032.a1;
+package com.example.mcs18440032.a1.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -17,20 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.mcs18440032.a1.MainActivity;
+import com.example.mcs18440032.a1.R;
 import com.example.mcs18440032.a1.db.event.EventEntity;
 import com.example.mcs18440032.a1.models.Event;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -82,11 +78,7 @@ public class NotificationService extends Service {
     private void checkAvailableEvents() throws ParseException {
         DateTime now = DateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-        System.out.println(now.toString(dateTimeFormatter));
-
         DateTime actualCurrentTime = dateTimeFormatter.parseDateTime(now.toString(dateTimeFormatter));
-
-        System.out.println(actualCurrentTime);
 
         List<Event> eventList = eventEntity.getAllByDate(null);
         for (Event event : eventList) {
