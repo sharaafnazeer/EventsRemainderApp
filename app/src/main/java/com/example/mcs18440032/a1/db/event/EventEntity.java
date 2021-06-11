@@ -82,6 +82,7 @@ public class EventEntity implements BaseColumns {
         values.put(EventEntity.EVENTS_COLUMN_REMAINDER_1, Helper.convertRemainderToDbFormat(event.getRemainder1()));
         values.put(EventEntity.EVENTS_COLUMN_REMAINDER_2, Helper.convertRemainderToDbFormat(event.getRemainder2()));
         values.put(EventEntity.EVENTS_COLUMN_REMAINDER_3, Helper.convertRemainderToDbFormat(event.getRemainder3()));
+        values.put(EventEntity.EVENTS_COLUMN_SEND_REMAINDER, 0);
 
         String selectionValue = EventEntity.EVENTS_COLUMN_ID + " = ?";
         String[] selectionArgs = {id + ""};
