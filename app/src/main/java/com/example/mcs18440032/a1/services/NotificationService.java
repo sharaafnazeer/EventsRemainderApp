@@ -19,7 +19,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.mcs18440032.a1.MainActivity;
 import com.example.mcs18440032.a1.R;
 import com.example.mcs18440032.a1.db.event.EventEntity;
-import com.example.mcs18440032.a1.helpers.Helper;
 import com.example.mcs18440032.a1.models.Event;
 
 import org.joda.time.DateTime;
