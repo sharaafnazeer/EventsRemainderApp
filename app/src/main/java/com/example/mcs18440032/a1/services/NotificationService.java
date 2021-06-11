@@ -88,9 +88,6 @@ public class NotificationService extends Service {
             LocalTime alertBefore = timeFormatter.parseLocalTime(event.getRemainder1());
             long eventLongTime = eventActualTime.getMillis();
             long alertLongTime = eventLongTime - alertBefore.getMillisOfDay();
-            System.out.println("ALERT CHECK NOW > ALERT ===  " + actualCurrentTime.isAfter(alertLongTime));
-            System.out.println("ALERT CHECK NOW < ALERT ===  " + actualCurrentTime.isBefore(alertLongTime));
-            System.out.println("ALERT CHECK NOW = ALERT ===  " + actualCurrentTime.isEqual(alertLongTime));
 
             if (eventActualTime.isAfter(actualCurrentTime.getMillis())) {
                 if (actualCurrentTime.isEqual(alertLongTime) && event.getIsRemainder() != 1) {
