@@ -2,26 +2,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mcs18440032.a1">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/events"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/events"
         android:supportsRtl="true"
         android:theme="@style/Theme.EventsRemainder">
-        <activity android:name=".EventListActivity" />
-        <activity
-            android:name=".ScheduleActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EventListActivity" />
+        <activity
+            android:name=".ScheduleActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MainActivity"/>
         <service android:name=".services.NotificationService" />
     </application>
 
